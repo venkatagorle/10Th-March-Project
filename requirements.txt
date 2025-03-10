@@ -1,0 +1,7 @@
+pandas
+sqlite3
+kaggle
+psycopg2
+sqlalchemy
+matplotlib
+seaborn
