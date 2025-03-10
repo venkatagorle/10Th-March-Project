@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
 import pandas as pd
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 # PostgreSQL connection details
 DB_URL = "postgresql://supermarket_fm98_user:TMm5U0YeBBTLmNVYlEJQ3SG69hnXPPS1@dpg-cv643oggph6c73djqm4g-a.oregon-postgres.render.com/supermarket_fm98"
@@ -9,7 +9,22 @@ DB_URL = "postgresql://supermarket_fm98_user:TMm5U0YeBBTLmNVYlEJQ3SG69hnXPPS1@dp
 # API setup
 app = FastAPI()
 
-# Endpoint to fetch total sales per product
+# ✅ Root endpoint to verify API is working
+@app.get("/")
+def home():
+    return {"message": "Supermarket Sales API is live 🚀"}
+
+# ✅ Health Check Endpoint (Verify Database Connectivity)
+@app.get("/health-check")
+def health_check():
+    try:
+        conn = psycopg2.connect(DB_URL)
+        conn.close()
+        return JSONResponse(content={"status": "Database connected ✅"}, status_code=200)
+    except Exception as e:
+        return JSONResponse(content={"status": "Database connection failed ❌", "error": str(e)}, status_code=500)
+
+# ✅ Fetch total sales per product
 @app.get("/sales-per-product")
 def get_sales_per_product():
     conn = psycopg2.connect(DB_URL)
@@ -24,7 +39,7 @@ def get_sales_per_product():
     conn.close()
     return df.to_dict(orient="records")
 
-# Endpoint to fetch total sales per customer type
+# ✅ Fetch total sales per customer type
 @app.get("/sales-per-customer-type")
 def get_sales_per_customer_type():
     conn = psycopg2.connect(DB_URL)
@@ -39,7 +54,7 @@ def get_sales_per_customer_type():
     conn.close()
     return df.to_dict(orient="records")
 
-# Endpoint to fetch monthly sales trend
+# ✅ Fetch monthly sales trend
 @app.get("/monthly-sales-trend")
 def get_monthly_sales_trend():
     conn = psycopg2.connect(DB_URL)
@@ -53,7 +68,7 @@ def get_monthly_sales_trend():
     conn.close()
     return df.to_dict(orient="records")
 
-# Endpoint to download the sales report PDF
+# ✅ Download the sales report PDF
 @app.get("/download-report")
 def download_report():
     report_path = r"C:\10 March 66 Project\reports\sales_report.pdf"
