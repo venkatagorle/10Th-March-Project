@@ -1,3 +1,5 @@
+uvicorn
+fastapi
 pandas
 kaggle
 psycopg2
